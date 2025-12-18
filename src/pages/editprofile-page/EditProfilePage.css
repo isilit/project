@@ -1,0 +1,79 @@
+.profileCountainer {
+  background: rgb(123, 101, 248);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  height: 700px;
+  opacity: 0.9;
+}
+
+.profileHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.profileHeader h3 {
+  color: #2c3e50;
+}
+
+.editBtn {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.editBtn:hover {
+  background-color: #2980b9;
+}
+
+.profileContent {
+  display: flex;
+  gap: 30px;
+}
+
+.profileAvatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #3498db;
+}
+
+.profileInfo {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.profileRow {
+  display: flex;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.label {
+  width: 150px;
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.value input{
+  background-color: rgb(123, 101, 248);
+  border: none;
+  color: white;
+}
+
+.value input::after{
+    border: none;
+}
+
+.value input::active{
+    border: none;
+}

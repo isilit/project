@@ -1,0 +1,31 @@
+.form{
+    width: 380px;
+    height: 100%;
+    border: 1px solid #000000;
+    border-radius: 20px;
+    margin-left: 530px;
+    padding: 23px;
+    margin-top: 100px;
+    background-color: white;
+}
+
+.text{
+    text-align: center;
+    font-size: 20px;
+}
+
+p{
+    margin: 10px;
+}
+
+.countainer{
+    margin-bottom: 20px;
+}
+.source{
+    margin-top: 20px;
+}
+.source .textSource{
+    margin-top: 50px;
+    color: rgb(43, 0, 183);
+    text-decoration: none;
+}
