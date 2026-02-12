@@ -1,40 +1,47 @@
 .profileCountainer {
-  background: rgb(123, 101, 248);
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  height: 700px;
-  opacity: 0.9;
+  background: #fff;
+  padding: 28px;
+  border-radius: 14px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+  border: 1px solid #e8eaed;
+  max-width: 560px;
+  margin: 24px auto 0;
 }
 
 .profileHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #eee;
 }
 
 .profileHeader h3 {
   color: #2c3e50;
+  font-size: 1.25rem;
+  font-weight: 600;
 }
 
 .editBtn {
-  background-color: #3498db;
-  color: white;
+  background: #3498db;
+  color: #fff;
   border: none;
-  padding: 8px 16px;
-  border-radius: 5px;
+  padding: 10px 18px;
+  border-radius: 10px;
   cursor: pointer;
   font-size: 14px;
+  font-weight: 500;
+  transition: background 0.2s;
 }
 
 .editBtn:hover {
-  background-color: #2980b9;
+  background: #2980b9;
 }
 
 .profileContent {
   display: flex;
-  gap: 30px;
+  gap: 28px;
 }
 
 .profileAvatar {
@@ -42,28 +49,32 @@
   height: 120px;
   border-radius: 50%;
   object-fit: cover;
-  border: 3px solid #3498db;
+  border: 3px solid #e0e4e8;
+  flex-shrink: 0;
 }
 
 .profileInfo {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
 }
 
 .profileRow {
   display: flex;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #eee;
+  align-items: center;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f0f2f5;
+  gap: 12px;
 }
 
 .label {
-  width: 150px;
-  font-weight: bold;
-  color: #2c3e50;
+  min-width: 130px;
+  font-weight: 600;
+  color: #5a6570;
+  font-size: 0.9rem;
 }
 
 .value {
-  color: #34495e;
+  color: #2c3e50;
 }

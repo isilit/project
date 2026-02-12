@@ -8,7 +8,9 @@ export default function Header() {
   return (
     <header className="header">
       <div className="logo">
-        <h2>Колледж IT TOP</h2>
+        <Link to="/main" style={{ color: 'inherit', textDecoration: 'none' }}>
+          <h2>Колледж IT TOP</h2>
+        </Link>
       </div>
       <div className="userInfo">
         <img 
