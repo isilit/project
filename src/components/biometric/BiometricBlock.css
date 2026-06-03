@@ -1,0 +1,66 @@
+.biometric-block {
+  margin: 1.5rem 2rem;
+  padding: 1.25rem 1.5rem;
+  background: #1e293b;
+  border-radius: 12px;
+  color: #f1f5f9;
+}
+
+.biometric-block h3 {
+  margin: 0 0 1rem;
+}
+
+.biometric-prompt {
+  margin: 0 0 1rem;
+  opacity: 0.9;
+}
+
+.biometric-verified {
+  display: flex;
+  gap: 1.25rem;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.biometric-photo {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 2px solid #38bdf8;
+}
+
+.biometric-actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.biometric-btn {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.biometric-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.biometric-btn.enroll {
+  background: #0ea5e9;
+  color: #fff;
+}
+
+.biometric-btn.identify {
+  background: #22c55e;
+  color: #fff;
+}
+
+.biometric-message {
+  margin-top: 0.75rem;
+  font-size: 0.9rem;
+  color: #94a3b8;
+}

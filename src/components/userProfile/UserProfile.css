@@ -1,0 +1,222 @@
+.userProfileContainer {
+  background: #fff;
+  padding: 28px;
+  border-radius: 14px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  border: 1px solid #e8eaed;
+  max-width: 720px;
+  margin: 24px auto 40px;
+}
+
+.userProfileHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #eee;
+}
+
+.userProfileHeader h3 {
+  color: #2c3e50;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.backBtn {
+  background: #95a5a6;
+  color: #fff;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+
+.backBtn:hover {
+  background: #7f8c8d;
+}
+
+.userProfileContent {
+  display: flex;
+  gap: 28px;
+  margin-bottom: 28px;
+}
+
+.userProfileAvatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #e0e4e8;
+  flex-shrink: 0;
+}
+
+.userProfileInfo {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.userProfileRow {
+  display: flex;
+  align-items: center;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f0f2f5;
+  gap: 12px;
+}
+
+.userProfileRow .label {
+  min-width: 130px;
+  font-weight: 600;
+  color: #5a6570;
+  font-size: 0.9rem;
+}
+
+.userProfileRow .value {
+  color: #2c3e50;
+}
+
+.userStatsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.userStatCard {
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+  border: 1px solid #e8eaed;
+}
+
+.userStatCard--onTime {
+  background: #eafaf1;
+  border-color: #a9dfbf;
+}
+
+.userStatCard--late {
+  background: #fef9e7;
+  border-color: #f9e79f;
+}
+
+.userStatCard--absent {
+  background: #fdedec;
+  border-color: #f5b7b1;
+}
+
+.userStatValue {
+  display: block;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #2c3e50;
+}
+
+.userStatLabel {
+  display: block;
+  margin-top: 6px;
+  font-size: 0.85rem;
+  color: #5a6570;
+}
+
+.userWeeklyChart h4 {
+  color: #2c3e50;
+  margin-bottom: 16px;
+  font-size: 1rem;
+}
+
+.userChart {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+  background-color: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #2c3e50;
+}
+
+.userChartItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.userChartBarContainer {
+  height: 150px;
+  width: 40px;
+  background-color: #ecf0f1;
+  border-radius: 5px;
+  position: relative;
+  overflow: hidden;
+}
+
+.userChartBar {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background-color: #3498db;
+  border-radius: 5px;
+  transition: height 0.3s;
+}
+
+.userChartDay {
+  font-weight: bold;
+  color: #2c3e50;
+  margin: 0;
+}
+
+.userChartValue {
+  font-size: 0.9rem;
+  color: #5a6570;
+  font-weight: 600;
+}
+
+.userChartLegend {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 12px;
+  font-size: 0.85rem;
+}
+
+.userChartLegend--onTime {
+  color: green;
+}
+
+.userChartLegend--late {
+  color: orange;
+}
+
+.userChartLegend--absent {
+  color: red;
+}
+
+.userNotFound {
+  text-align: center;
+  padding: 48px 24px;
+  color: #5a6570;
+}
+
+.userNotFound h3 {
+  color: #2c3e50;
+  margin-bottom: 16px;
+}
+
+.userNotFound button {
+  background: #3498db;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.userNotFound button:hover {
+  background: #2980b9;
+}
