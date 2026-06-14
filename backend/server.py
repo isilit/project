@@ -1,4 +1,4 @@
-"""Flask API — журнал посещаемости + биометрия."""
+"""Flask API — журнал посещаемости, биометрия, админка."""
 import base64
 import os
 import pickle
@@ -11,13 +11,31 @@ import database as db
 app = Flask(__name__)
 CORS(app)
 
-PHOTO_DIR = os.environ.get(
-    'PHOTO_DIR',
-    os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'photo'),
-)
+_BASE = os.path.dirname(os.path.abspath(__file__))
+PHOTO_DIR = os.environ.get('PHOTO_DIR', os.path.join(_BASE, '..', 'photo'))
 os.makedirs(PHOTO_DIR, exist_ok=True)
 
 db.init_db()
+
+
+def _admin_user_id():
+    raw = request.headers.get('X-User-Id')
+    if not raw:
+        return None
+    try:
+        user_id = int(raw)
+    except ValueError:
+        return None
+    user = db.get_account(user_id)
+    if not db.is_admin(user):
+        return None
+    return user_id
+
+
+def _require_admin():
+    if not _admin_user_id():
+        return jsonify({'error': 'Admin access required'}), 403
+    return None
 
 
 @app.route('/photos/<path:filename>')
@@ -56,6 +74,7 @@ def login():
 
     user_dict = dict(user)
     del user_dict['password']
+    user_dict['isAdminUser'] = db.is_admin(user)
     return jsonify({'message': 'Login successful', 'user': user_dict}), 200
 
 
@@ -66,6 +85,7 @@ def get_user(user_id):
         return jsonify({'error': 'User not found'}), 404
     user_dict = dict(user)
     del user_dict['password']
+    user_dict['isAdminUser'] = db.is_admin(user)
     return jsonify(user_dict), 200
 
 
@@ -108,8 +128,89 @@ def get_stats(user_id):
 
 @app.route('/users', methods=['GET'])
 def get_all_users():
+    group = request.args.get('group')
+    if group:
+        return jsonify(db.get_users_by_group(group)), 200
     return jsonify(db.get_all_accounts_public()), 200
 
+
+@app.route('/groups', methods=['GET'])
+def list_groups():
+    return jsonify(db.get_all_groups()), 200
+
+
+# ==================== ADMIN ====================
+
+@app.route('/admin/data', methods=['GET'])
+def admin_data():
+    denied = _require_admin()
+    if denied:
+        return denied
+    return jsonify(db.get_admin_snapshot()), 200
+
+
+@app.route('/admin/accounts/<int:account_id>', methods=['PUT'])
+def admin_update_account(account_id):
+    denied = _require_admin()
+    if denied:
+        return denied
+
+    data = request.json or {}
+    if not db.update_account(account_id, data, allow_group=True):
+        return jsonify({'error': 'Update failed'}), 400
+    return jsonify({'message': 'Account updated'}), 200
+
+
+@app.route('/admin/accounts/<int:account_id>', methods=['DELETE'])
+def admin_delete_account(account_id):
+    denied = _require_admin()
+    if denied:
+        return denied
+
+    db.delete_account(account_id)
+    return jsonify({'message': 'Account deleted'}), 200
+
+
+@app.route('/admin/groups', methods=['POST'])
+def admin_create_group():
+    denied = _require_admin()
+    if denied:
+        return denied
+
+    data = request.json or {}
+    if not data.get('name'):
+        return jsonify({'error': 'name required'}), 400
+
+    try:
+        gid = db.create_group(data['name'], data.get('description', ''))
+        return jsonify({'id': gid}), 201
+    except Exception as e:
+        return jsonify({'error': str(e)}), 400
+
+
+@app.route('/admin/groups/<int:group_id>', methods=['PUT'])
+def admin_update_group(group_id):
+    denied = _require_admin()
+    if denied:
+        return denied
+
+    data = request.json or {}
+    if not db.update_group(group_id, data.get('name', ''), data.get('description', '')):
+        return jsonify({'error': 'Group not found'}), 404
+    return jsonify({'message': 'Group updated'}), 200
+
+
+@app.route('/admin/groups/<int:group_id>', methods=['DELETE'])
+def admin_delete_group(group_id):
+    denied = _require_admin()
+    if denied:
+        return denied
+
+    db.delete_group(group_id)
+    return jsonify({'message': 'Group deleted'}), 200
+
+
+# ==================== BIOMETRIC ====================
 
 @app.route('/api/biometric/faces', methods=['GET'])
 def api_get_faces():
@@ -158,6 +259,11 @@ def api_identify_result():
     attendance = db.increment_account_field(account_id, field)
     return jsonify({'attendance': attendance}), 200
 
+# Health check для Electron/wait-on
+@app.route('/health', methods=['GET', 'HEAD'])
+def health_check():
+    """Health check endpoint"""
+    return '', 200
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))

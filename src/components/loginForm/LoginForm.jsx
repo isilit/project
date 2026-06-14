@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import '../../App.css';
 import './LoginForm.css';
 import { loginUser } from '../../services/api';
-import { encodePasswordBase64 } from '../../utils/password';
+import { hashPasswordSha256 } from '../../utils/password';
 import { useAuth } from '../../context/AuthContext';
 
 export default function LoginForm() {
@@ -38,9 +38,9 @@ export default function LoginForm() {
 
     setSubmitting(true);
     try {
-      const encoded = encodePasswordBase64(password);
-      const data = await loginUser(username, encoded);
-      await login(username, encoded, data.user);
+      const passwordHash = await hashPasswordSha256(password);
+      const data = await loginUser(username, passwordHash);
+      await login(username, passwordHash, data.user);
       navigate('/main');
     } catch (e) {
       alert(e.message || 'Неверный логин или пароль');

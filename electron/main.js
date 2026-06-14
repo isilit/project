@@ -1,13 +1,11 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
-const { spawn } = require('child_process');
 const fs = require('fs');
 const Database = require('better-sqlite3');
+const { spawnPython } = require('./pythonRunner');
+const { PROJECT_ROOT, BACKEND_DIR, PHOTO_DIR, API_URL } = require('./paths');
 
 const isDev = !app.isPackaged;
-const PROJECT_ROOT = path.join(__dirname, '..');
-const BACKEND_DIR = path.join(PROJECT_ROOT, 'backend');
-const PHOTO_DIR = path.join(PROJECT_ROOT, 'photo');
 const SESSION_DB = path.join(app.getPath('userData'), 'session.db');
 
 let mainWindow = null;
@@ -27,29 +25,22 @@ function initSessionDb() {
 }
 
 function startBackend() {
-  const serverScript = path.join(BACKEND_DIR, 'server.py');
-  const pythonCmd = process.env.PYTHON || 'python';
-  apiProcess = spawn(pythonCmd, [serverScript], {
-    cwd: BACKEND_DIR,
-    env: {
-      ...process.env,
-      PHOTO_DIR,
-      PORT: '5000',
-    },
-    stdio: 'inherit',
-    shell: process.platform === 'win32',
+  if (process.env.BACKEND_EXTERNAL === '1') {
+    return;
+  }
+
+  apiProcess = spawnPython('server.py', [], { stdio: 'inherit' });
+  apiProcess.on('error', (err) => {
+    console.error('Не удалось запустить API:', err.message);
   });
 }
 
 function runBiometric(mode, user) {
   return new Promise((resolve, reject) => {
-    const script = path.join(BACKEND_DIR, 'main_logic.py');
-    const pythonCmd = process.env.PYTHON || 'python';
     const args = [
-      script,
       '--mode', mode,
-      '--api', 'http://127.0.0.1:5000',
-      '--photo-dir', PHOTO_DIR,
+      '--api', API_URL,
+      '--photo-dir', path.resolve(PHOTO_DIR),
     ];
 
     if (mode === 'enroll' && user) {
@@ -58,16 +49,17 @@ function runBiometric(mode, user) {
       args.push('--last-name', user.lastName || '');
     }
 
-    const proc = spawn(pythonCmd, args, {
-      cwd: BACKEND_DIR,
-      env: process.env,
-      shell: process.platform === 'win32',
-    });
+    const proc = spawnPython('main_logic.py', args);
 
     let stdout = '';
     let stderr = '';
-    proc.stdout.on('data', (d) => { stdout += d.toString(); });
-    proc.stderr.on('data', (d) => { stderr += d.toString(); });
+
+    proc.stdout.on('data', (d) => { stdout += d.toString('utf8'); });
+    proc.stderr.on('data', (d) => { stderr += d.toString('utf8'); });
+
+    proc.on('error', (err) => {
+      reject(new Error(`Python: ${err.message}`));
+    });
 
     proc.on('close', (code) => {
       const lines = stdout.trim().split('\n').filter(Boolean);
@@ -102,6 +94,7 @@ function createWindow() {
 
 app.whenReady().then(() => {
   fs.mkdirSync(PHOTO_DIR, { recursive: true });
+  fs.mkdirSync(path.join(PROJECT_ROOT, 'admin'), { recursive: true });
   initSessionDb();
   startBackend();
   createWindow();
@@ -146,4 +139,9 @@ ipcMain.handle('session:clear', () => {
 
 ipcMain.handle('biometric:enroll', async (_e, user) => runBiometric('enroll', user));
 ipcMain.handle('biometric:identify', async () => runBiometric('identify'));
-ipcMain.handle('biometric:isElectron', () => true);
+ipcMain.handle('app:getPaths', () => ({
+  projectRoot: PROJECT_ROOT,
+  backendDir: BACKEND_DIR,
+  photoDir: PHOTO_DIR,
+  apiUrl: API_URL,
+}));

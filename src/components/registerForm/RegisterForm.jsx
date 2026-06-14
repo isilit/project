@@ -3,7 +3,7 @@ import { useState } from 'react';
 import '../../App.css';
 import './RegisterForm.css';
 import { registerUser } from '../../services/api';
-import { encodePasswordBase64 } from '../../utils/password';
+import { hashPasswordSha256 } from '../../utils/password';
 
 export default function RegisterForm() {
   const navigate = useNavigate();
@@ -62,7 +62,7 @@ export default function RegisterForm() {
 
     setSubmitting(true);
     try {
-      const encodedPassword = encodePasswordBase64(password);
+      const passwordHash = await hashPasswordSha256(password);
       await registerUser({
         username,
         firstName,
@@ -70,7 +70,7 @@ export default function RegisterForm() {
         patronymic: patronymic || null,
         age: parseInt(age, 10) || 18,
         city,
-        password: encodedPassword,
+        password: passwordHash,
         group: 'ИС-21',
       });
       alert('Регистрация успешна. Войдите в аккаунт.');

@@ -5,6 +5,10 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { photoUrl } from '../../services/api';
 
+function isAdminUser(user) {
+  return user?.isAdminUser || user?.isAdmin || user?.group === 'Администрация';
+}
+
 export default function Header() {
   const { user } = useAuth();
   const avatarSrc = user?.photoUrl && user?.biometricVerified
@@ -19,6 +23,9 @@ export default function Header() {
         </Link>
       </div>
       <div className="userInfo">
+        {isAdminUser(user) && (
+          <Link to="/admin" className="admin-link">Админка</Link>
+        )}
         <img src={avatarSrc} alt="Аватар" className="avatar" />
         <div>
           <p className="name">

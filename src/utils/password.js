@@ -1,8 +1,9 @@
-/** Кодирование пароля в Base64 перед отправкой на сервер (по ТЗ). */
-export function encodePasswordBase64(password) {
-  return btoa(unescape(encodeURIComponent(password)));
-}
-
-export function decodePasswordBase64(encoded) {
-  return decodeURIComponent(escape(atob(encoded)));
+/** Хеширование пароля SHA-256 перед отправкой на сервер. */
+export async function hashPasswordSha256(password) {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(password);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  return Array.from(new Uint8Array(hashBuffer))
+    .map((b) => b.toString(16).padStart(2, '0'))
+    .join('');
 }
